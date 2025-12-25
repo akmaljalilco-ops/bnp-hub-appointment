@@ -1350,6 +1350,31 @@ function submitBooking(e) {
   }
 }
 </script>
+function submitBooking() {
+  const data = {
+    regno: document.getElementById("regno").value,
+    date: document.getElementById("date").value,
+    advisor: document.getElementById("advisor").value,
+    phone: document.getElementById("phone").value,
+    notes: document.getElementById("notes")?.value || ""
+  };
+
+  fetch("https://script.google.com/macros/s/AKfycbymj0H8K7TpqPH6P_VLuGM2yxpPNvMsiEeM3iuW-REDYhFifswUfmeh9gOBfghkfaSu/exec", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  })
+  .then(res => res.json())
+  .then(res => {
+    if (!res.success) {
+      alert(res.message);
+    } else {
+      window.open(res.wa, "_blank");
+      alert("Appointment booked successfully");
+    }
+  })
+  .catch(() => alert("Network error"));
+}
 
 </body>
 </html>
