@@ -1349,32 +1349,45 @@ function submitBooking(e) {
     document.getElementById("notes").value = "";
   }
 }
-</script>
+<script>
 function submitBooking() {
   const data = {
-    regno: document.getElementById("regno").value,
+    regno: document.getElementById("regno").value.trim(),
     date: document.getElementById("date").value,
     advisor: document.getElementById("advisor").value,
-    phone: document.getElementById("phone").value,
+    phone: document.getElementById("phone").value.trim(),
     notes: document.getElementById("notes")?.value || ""
   };
 
-  fetch("https://script.google.com/macros/s/AKfycbymj0H8K7TpqPH6P_VLuGM2yxpPNvMsiEeM3iuW-REDYhFifswUfmeh9gOBfghkfaSu/exec", {
+  if (!data.regno || !data.date || !data.phone) {
+    alert("Please fill all required fields.");
+    return;
+  }
+
+  fetch("https://script.google.com/macros/s/AKfycbmjQH8K7TpqH6P_VLuGM2yxpPNwMsiEeM3luW-REDYhFifsWUFmeh9oBGfhkfaSu/exec", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data)
   })
   .then(res => res.json())
   .then(res => {
-    if (!res.success) {
-      alert(res.message);
-    } else {
+    if (res.success) {
       window.open(res.wa, "_blank");
       alert("Appointment booked successfully");
+
+      // Clear form
+      document.getElementById("regno").value = "";
+      document.getElementById("date").value = "";
+      document.getElementById("advisor").value = "";
+      document.getElementById("phone").value = "";
+      document.getElementById("notes").value = "";
+    } else {
+      alert(res.message);
     }
   })
-  .catch(() => alert("Network error"));
+  .catch(() => alert("Network error. Please try again."));
 }
+</script>
 
 </body>
 </html>
